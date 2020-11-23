@@ -1,8 +1,10 @@
 div.container {
+    font-family: Arial, Helvetica, sans-serif;
     display: grid;
     justify-content: center;
     margin: 125px 540px 0px 540px;
     border: 3px solid black;
+    background-color: #423B3A;
 }
 
 button {
@@ -16,14 +18,68 @@ button {
 
 #clear-button {
     width: 158px;
+    background-color: #267191;
+    color: white;
+}
+
+#clear-button:hover {
+    background-color: #2e7ea0;
+}
+
+#clear-button:active {
+    background-color: #2e7ea0;
+    transform: translateY(1px);
+}
+
+#equals-button {
+    background-color: #323FE9;
+    color: white;
+}
+
+#equals-button:hover {
+    background-color: #3B48F6;
+}
+
+#equals-button:active {
+    background-color: #3B48F6;
+    transform: translateY(1px);
 }
 
 #display-text {
     text-align: right;
     margin: 3px 0px 3px 0px;
     width: 211px;
-    height: 38px;
+    height: 48px;
     border: 1px solid black;
     font-size: 28px;
     overflow: auto;
+    background-color: white;
+}
+
+button.operator {
+    background-color: #323FE9;
+    color: white;
+}
+
+button.operator:hover {
+    background-color: #3B48F6;
+}
+
+button.operator:active {
+    background-color: #3B48F6;
+    transform: translateY(1px);
+}
+
+button.number {
+    background-color: #de9031;
+    color: white;
+}
+
+button.number:hover {
+    background-color: #F1992E;
+}
+
+button.number:active {
+    background-color: #F1992E;
+    transform: translateY(1px);
 }

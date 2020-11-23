@@ -45,7 +45,7 @@ function clearDisplay() {
     firstNumArray.length = 0;
     secondNumArray.length = 0;
     displayNumber = 0;
-    displayTextBox.innerHTML = displayNumber;
+    displayTextBox.innerHTML = 0;
     globalOperator = "";
     operatorPressed = false;
     operationCounter = 0;
@@ -62,6 +62,24 @@ function addToSecondArray(number) {
     displayTextBox.innerHTML = secondNumArray.join("");
 }
 
+/*should be ran when user presses Equals based on certain cicrumstances*/
+function userPressedEquals() {
+    firstNumArray[0] = displayNumber;
+    firstNumArray.length = 1;
+    secondNumArray.length = 0;
+    operatorPressed = false;
+    operationCounter = 0;
+    equalsPressed = true;
+}
+
+/*should be ran when user presses operator based on certain cicrumstances*/
+function userPressedOperator() {
+    firstNumArray[0] = displayNumber;
+    secondNumArray.length = 0;
+    firstNumArray.length = 1;
+    globalOperator = e.target.value;    
+}
+
 gridContainer.addEventListener("click", function(e) {
     if (e.target.matches("#clear-button")) {
         clearDisplay();
@@ -69,7 +87,7 @@ gridContainer.addEventListener("click", function(e) {
 
     if (e.target.matches(".operator") && operatorPressed == false) {
         if (firstNumArray.length == 0) {
-            innerHTML = displayNumber;
+            displayTextBox.innerHTML = Math.round((displayNumber + Number.EPSILON) * 100) / 100;
         }
         else {
             globalOperator = e.target.value;
@@ -79,16 +97,32 @@ gridContainer.addEventListener("click", function(e) {
     }
 
     else if (e.target.matches(".operator") && operationCounter == 1) {
-        displayNumber = operate(parseInt(firstNumArray.join("")), parseInt(secondNumArray.join("")), globalOperator);
-        displayTextBox.innerHTML = displayNumber;
-        firstNumArray[0] = displayNumber;
-        secondNumArray.length = 0;
-        firstNumArray.length = 1;
-        globalOperator = e.target.value;    
+        if (secondNumArray.length == 0) {
+            globalOperator = e.target.value;
+        }
+        else {
+            /*don't let user divide by 0*/
+            if (secondNumArray.join("") == 0 && globalOperator == "/") {
+                displayTextBox.innerHTML = "You know better.";
+                userPressedOperator();
+            }
+            else {
+                displayNumber = operate(parseFloat(firstNumArray.join("")), parseFloat(secondNumArray.join("")), globalOperator);
+                displayTextBox.innerHTML = Math.round((displayNumber + Number.EPSILON) * 100) / 100;
+                userPressedOperator();
+            }
+        }
+        
     }
     
     if (e.target.matches(".number") && operatorPressed == true) {
-        addToSecondArray(e.target.value);
+        /*only allow one period per input*/
+        if (e.target.value == "." && secondNumArray.includes(".")) {
+        }
+        else {
+            addToSecondArray(e.target.value);
+        }
+        
     }
 
     else if(e.target.matches(".number") && operatorPressed == false) {
@@ -96,28 +130,34 @@ gridContainer.addEventListener("click", function(e) {
             firstNumArray.length = 0;
             equalsPressed = false;
         }
-        addToFirstArray(e.target.value);
+        if (e.target.value == "." && firstNumArray.includes(".")) {
+        }
+        else {
+            addToFirstArray(e.target.value);
+        }
     }
 
     if (e.target.matches("#equals-button")) {
         if (firstNumArray.length == 0) {
-            innerHTML = displayNumber;
+            innerHTML = Math.round((displayNumber + Number.EPSILON) * 100) / 100;
         }
         else if (firstNumArray.length > 0 && secondNumArray.length == 0) {
             displayNumber = firstNumArray.join("");
             firstNumArray[0] = displayNumber;
             firstNumArray.length = 1;
-            innerHTML = displayNumber;
+            innerHTML = Math.round((displayNumber + Number.EPSILON) * 100) / 100;
         }
         else if (firstNumArray.length > 0 && secondNumArray.length > 0) {
-            displayNumber = operate(parseInt(firstNumArray.join("")), parseInt(secondNumArray.join("")), globalOperator);
-            displayTextBox.innerHTML = displayNumber;
-            firstNumArray[0] = displayNumber;
-            firstNumArray.length = 1;
-            secondNumArray.length = 0;
-            operatorPressed = false;
-            operationCounter = 0;
-            equalsPressed = true;
+            /*don't let user try do divide by 0*/
+            if (secondNumArray.join("") == 0 && globalOperator == "/") {
+                displayTextBox.innerHTML = "You know better."
+                userPressedEquals()
+            }
+            else {
+                displayNumber = operate(parseFloat(firstNumArray.join("")), parseFloat(secondNumArray.join("")), globalOperator);
+                displayTextBox.innerHTML = Math.round((displayNumber + Number.EPSILON) * 100) / 100;
+                userPressedEquals()
+            }
         }
     }   
 });
